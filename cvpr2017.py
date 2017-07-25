@@ -3,6 +3,7 @@
 import urllib
 import urllib2
 import re
+import os
 def getHtml(url):
     page = urllib.urlopen(url)
     html = page.read()
@@ -11,6 +12,9 @@ def getHtml(url):
 
 def download_file(download_url,file_name):
     print(file_name)
+    if os.path.exists(file_name):
+        print("Exist")
+        return
     response = urllib2.urlopen(download_url)
     file = open(file_name, 'w')
     file.write(response.read())
