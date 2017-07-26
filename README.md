@@ -1,3 +1,3 @@
 # CVPR2017Download
-Download cvpr 2017 papers to a certain folder
-A classifcated version will be upated soon
+cvpr2017.py downloads papers to a certain folder.
+classify.py seperates the papers by certain class and topic.
