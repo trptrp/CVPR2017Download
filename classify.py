@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # coding=utf-8
 import unicodedata
 import time
@@ -19,7 +19,7 @@ def find_in_array(file_name_list,search_str):
     index = 0
     search_str = unicodedata.normalize('NFKD', search_str).encode('ascii','ignore')
     for i in range(0,len(file_name_list)):
-        if(not file_name_list[i].lower().find(search_str.lower())==-1):
+        if(not bytes(file_name_list[i].lower(), 'utf-8').find(search_str.lower())==-1):
             flag+=1
             index =i
     if flag == 1:
@@ -29,24 +29,17 @@ def find_in_array(file_name_list,search_str):
 
 
 def mkdir(path):
-    # 引入模块
     import os
 
-    # 去除首位空格
     path=path.strip()
-    # 去除尾部 \ 符号
     path=path.rstrip("\\")
     isExists=os.path.exists(path)
-
-    # 判断结果
     if not isExists:
-        # 如果不存在则创建目录
-        # 创建目录操作函数
         os.makedirs(path)
         return True
     else:
-        # 如果目录存在则不创建，并提示目录已存在
         return False
+
 def letters(input):
     valids = []
     for character in input:
@@ -54,16 +47,17 @@ def letters(input):
             valids.append(character)
     return ''.join(valids)
 
-#file_path = '/home/sherwood/cvpr2016/'
-#save_path = '/home/sherwood/cvpr2016_class/'
+file_path = '/Users/trp/cvpr2017/'
+save_path = '/Users/trp/cvpr2017_class/'
 url = 'http://www.cvpapers.com/cvpr2017.html'
-#files = [ f for f in listdir(file_path) if isfile(join(file_path,f)) ]
+files = [ f for f in listdir(file_path) if isfile(join(file_path,f)) ]
 html = getHtml(url)
-soup = BeautifulSoup(html, "lxml")
+soup = BeautifulSoup(html, "html.parser")
 program_list = soup.find_all("dt")
-count = 0
+count = 0 
 no_copy = 0
 check = []
+error_item = []
 for i in range(0,len(program_list)):
     name = program_list[i].get_text()
     name_array = name.split(' ')
@@ -92,31 +86,37 @@ for i in range(0,len(program_list)):
             paperClass = "Oral"
         spacePose = pre_h3.rfind(' ')
         field = pre_h3[0:spacePose]
-    print(paperClass + ' ' + field + ' ' + name)
-#    dir_path = save_path+pre_h3+'/'+pre_h4+'/'
-#     mkdir(dir_path)
-#     index = find_in_array(files,search_str)
-#     # if index in check:
-#     #     print 'error'
-#     #     print(index)
-#     check.append(index)
-#     if index:
-#         shutil.copy(file_path+files[index],dir_path+files[index])
-#         count += 1
-#     else:
-#         flag = 0
-#         while (not index) and flag <3:
-#             index = find_in_array(files,name_array[flag])
-#             flag += 1
-#         if index:
-#             shutil.copy(file_path+files[index],dir_path+files[index])
-#             count += 1
-#         else:
-#             shutil.copy(file_path+files[index],save_path+files[index])
-#             no_copy += 1
-#             count += 1
-#             print(name)
-#     #print "total is 643 and now is "+str(count)+"and no copy is"+str(no_copy)
-
+    try:
+        print(paperClass + ' ' + field + '/' + name)
+    except:
+        error_item.append(name)
+        continue
+    dir_path = save_path+paperClass+'/'+field+'/'
+    mkdir(dir_path)
+    index = find_in_array(files,search_str)
+    if index in check:
+        print('error')
+        print(index)
+    check.append(index)
+    if index:
+        shutil.copy(file_path+files[index],dir_path+files[index])
+        count += 1
+    else:
+        flag = 0
+        while (not index) and flag <3:
+            index = find_in_array(files,name_array[flag])
+            flag += 1
+        if index:
+            shutil.copy(file_path+files[index],dir_path+files[index])
+            count += 1
+        else:
+            shutil.copy(file_path+files[index],save_path+files[index])
+            no_copy += 1
+            count += 1
+            print(name)
+print(len(error_item))
+for item in error_item:
+    print(item.encode('utf-8'))
+print(len(check))
 print(len(program_list))
 
