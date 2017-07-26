@@ -76,10 +76,23 @@ for i in range(0,len(program_list)):
         search_str = search_str + '_' + name_array[ii]
         ii = ii+1
 
-    pre_h4 = program_list[i].find_previous("h4").text
-    pre_h3 = program_list[i].find_previous("h3").text # poster with 4-2 like tails and
-    print(search_str)
-    print(pre_h3+'_'+pre_h4+'_')
+    pre_h4 = program_list[i].find_previous("h4").text #
+    pre_h3 = program_list[i].find_previous("h3").text # poster with 4-2 like tails or normal field
+
+    #is Poster?
+    partion = pre_h3.split(' ')
+    if partion[0] == "Poster":
+        paperClass = "Poster"
+        field = pre_h4
+    else:
+        partion = pre_h4.split(' ')
+        if partion[0] == "Spotlight":
+            paperClass = "Spotlight"
+        else:
+            paperClass = "Oral"
+        spacePose = pre_h3.rfind(' ')
+        field = pre_h3[0:spacePose]
+    print(paperClass + ' ' + field + ' ' + name)
 #    dir_path = save_path+pre_h3+'/'+pre_h4+'/'
 #     mkdir(dir_path)
 #     index = find_in_array(files,search_str)
