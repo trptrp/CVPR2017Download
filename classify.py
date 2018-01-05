@@ -47,6 +47,7 @@ def letters(input):
             valids.append(character)
     return ''.join(valids)
 
+
 file_path = '/Users/trp/cvpr2017/'
 save_path = '/Users/trp/cvpr2017_class/'
 url = 'http://www.cvpapers.com/cvpr2017.html'
@@ -114,6 +115,7 @@ for i in range(0,len(program_list)):
             no_copy += 1
             count += 1
             print(name)
+
 print(len(error_item))
 for item in error_item:
     print(item.encode('utf-8'))
